@@ -24,7 +24,7 @@ func main() {
 	})
 
 	bot.On("messageCreate", func(message FrostAPI.Message) {
-		if message.Content == "!ping" && message.Author.ID == "1043434358637342803" {
+		if message.Content == "!ping" {
 			bot.User.DeleteMessage(bot, message.ChannelID, message.ID)
 			bot.User.SendMessage(bot, message.ChannelID, "Pong! :ping_pong:")
 		}
