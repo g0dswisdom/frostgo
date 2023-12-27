@@ -12,10 +12,17 @@ import (
 )
 
 // Types
+
+// This contains all of the webhook functions.
 type webhookManager struct{}
+
+// This contains all of the user functions.
 type userManager struct{}
+
+// This contains all of the guild functions.
 type guildManager struct{}
 
+// Discord bot.
 type Bot struct {
 	Token          string
 	eventListeners map[string][]interface{}
