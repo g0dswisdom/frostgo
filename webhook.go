@@ -3,7 +3,7 @@ package FrostAPI
 import "fmt"
 
 // Creates a new Discord webhook.
-func (w *webhookManager) CreateWebhook(b *Bot, ChannelID, Name string) {
+func (w *WebhookManager) CreateWebhook(b *Bot, ChannelID, Name string) {
 	endpoint := fmt.Sprintf("https://discord.com/api/v9/channels/%s/webhooks", ChannelID)
 
 	data := map[string]interface{}{
@@ -13,7 +13,7 @@ func (w *webhookManager) CreateWebhook(b *Bot, ChannelID, Name string) {
 }
 
 // Deletes a Discord webhook.
-func (w *webhookManager) DeleteWebhook(b *Bot, WebhookID string) {
+func (w *WebhookManager) DeleteWebhook(b *Bot, WebhookID string) {
 	endpoint := fmt.Sprintf("https://discord.com/api/v9/webhooks/%s", WebhookID)
 	customRequest(b, "DELETE", endpoint, nil, nil)
 }

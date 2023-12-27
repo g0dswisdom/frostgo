@@ -14,13 +14,13 @@ import (
 // Types
 
 // This contains all of the webhook functions.
-type webhookManager struct{}
+type WebhookManager struct{}
 
 // This contains all of the user functions.
-type userManager struct{}
+type UserManager struct{}
 
 // This contains all of the guild functions.
-type guildManager struct{}
+type GuildManager struct{}
 
 // Discord bot.
 type Bot struct {
@@ -28,9 +28,9 @@ type Bot struct {
 	eventListeners map[string][]interface{}
 	conn           *websocket.Conn
 	mutex          sync.Mutex
-	User           userManager
-	Webhooks       webhookManager
-	Guild          guildManager
+	User           UserManager
+	Webhooks       WebhookManager
+	Guild          GuildManager
 }
 
 // Bot functions and event emitter
