@@ -50,3 +50,9 @@ func (u *UserManager) EditMessage(b *Bot, ChannelID, MessageID string, Content s
 	}
 	customRequest(b, "PATCH", endpoint, data, nil)
 }
+
+// Post a typing indicator for the specified channel.
+func (u *UserManager) SendTyping(b *Bot, ChannelID string) {
+	endpoint := fmt.Sprintf("https://discord.com/api/v9/channels/%s/typing", ChannelID)
+	customRequest(b, "POST", endpoint, nil, nil)
+}
