@@ -1,4 +1,4 @@
-# Frostgo
+# FrostGo
 FrostGo is a customizable fully open-source Discord API wrapper created in Go, for selfbots.
 
 FrostGo is still WIP (work in progress), which means its unfinished.
@@ -33,3 +33,7 @@ func main() {
 	select {} // Keep the bot running
 }
 ```
+# Note
+Using a Discord selfbot is against the Discord TOS.
+
+The author is not responsible for any damages done to the users account.
