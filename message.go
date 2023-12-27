@@ -3,8 +3,8 @@ package FrostAPI
 import "fmt"
 
 // Sends a Discord message.
-func (u *UserManager) SendMessage(b *Bot, ChannelID, Content string) {
-	nonce := NewNonce()
+func (u *userManager) SendMessage(b *Bot, ChannelID, Content string) {
+	nonce := newNonce()
 
 	endpoint := fmt.Sprintf("https://discord.com/api/v9/channels/%s/messages", ChannelID)
 
@@ -18,8 +18,8 @@ func (u *UserManager) SendMessage(b *Bot, ChannelID, Content string) {
 }
 
 // Replies to a Discord message.
-func (u *UserManager) SendMessageWithReply(b *Bot, ChannelID, MessageID, Content string) {
-	nonce := NewNonce()
+func (u *userManager) SendMessageWithReply(b *Bot, ChannelID, MessageID, Content string) {
+	nonce := newNonce()
 	endpoint := fmt.Sprintf("https://discord.com/api/v9/channels/%s/messages", ChannelID)
 
 	data := map[string]interface{}{
@@ -36,13 +36,13 @@ func (u *UserManager) SendMessageWithReply(b *Bot, ChannelID, MessageID, Content
 }
 
 // Deletes a Discord message.
-func (u *UserManager) DeleteMessage(b *Bot, ChannelID, MessageID string) {
+func (u *userManager) DeleteMessage(b *Bot, ChannelID, MessageID string) {
 	endpoint := fmt.Sprintf("https://discord.com/api/v9/channels/%s/messages/%s", ChannelID, MessageID)
 	customRequest(b, "DELETE", endpoint, nil, nil)
 }
 
 // Edits a Discord message.
-func (u *UserManager) EditMessage(b *Bot, ChannelID, MessageID string, Content string) {
+func (u *userManager) EditMessage(b *Bot, ChannelID, MessageID string, Content string) {
 	endpoint := fmt.Sprintf("https://discord.com/api/v9/channels/%s/messages/%s", ChannelID, MessageID)
 
 	data := map[string]interface{}{

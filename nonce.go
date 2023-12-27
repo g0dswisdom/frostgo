@@ -8,7 +8,7 @@ import (
 var epoch = time.Date(2015, 1, 1, 0, 0, 0, 0, time.UTC).UnixNano() / 1e6
 var increment int64 = 0
 
-func NewNonce() string {
+func newNonce() string {
 	timestamp := time.Now().UnixNano() / 1e6
 
 	if increment >= 4095 {

@@ -12,18 +12,18 @@ import (
 )
 
 // Types
-type WebhookManager struct{}
-type UserManager struct{}
-type GuildManager struct{}
+type webhookManager struct{}
+type userManager struct{}
+type guildManager struct{}
 
 type Bot struct {
 	Token          string
 	eventListeners map[string][]interface{}
 	conn           *websocket.Conn
 	mutex          sync.Mutex
-	User           UserManager
-	Webhooks       WebhookManager
-	Guild          GuildManager
+	User           userManager
+	Webhooks       webhookManager
+	Guild          guildManager
 }
 
 // Bot functions and event emitter

@@ -6,19 +6,19 @@ import (
 )
 
 // Kicks an user.
-func (g *GuildManager) KickUser(b *Bot, GuildID, User string) {
+func (g *guildManager) KickUser(b *Bot, GuildID, User string) {
 	endpoint := fmt.Sprintf("https://discord.com/api/v9/guilds/%s/members/%s", GuildID, User)
 	customRequest(b, "DELETE", endpoint, nil, nil)
 }
 
 // Bans an user.
-func (g *GuildManager) BanUser(b *Bot, GuildID, User string) {
+func (g *guildManager) BanUser(b *Bot, GuildID, User string) {
 	endpoint := fmt.Sprintf("https://discord.com/api/v9/guilds/%s/bans/%s", GuildID, User)
 	customRequest(b, "PUT", endpoint, nil, nil)
 }
 
 // Creates a new channel.
-func (g *GuildManager) CreateChannel(b *Bot, GuildID, CategoryID, Name string) Channel {
+func (g *guildManager) CreateChannel(b *Bot, GuildID, CategoryID, Name string) Channel {
 	endpoint := fmt.Sprintf("https://discord.com/api/v9/guilds/%s/channels", GuildID)
 	data := map[string]interface{}{
 		"name":      Name,
@@ -31,7 +31,7 @@ func (g *GuildManager) CreateChannel(b *Bot, GuildID, CategoryID, Name string) C
 }
 
 // Creates a new channel, with no category.
-func (g *GuildManager) CreateChannelNoCategory(b *Bot, GuildID, Name string) Channel {
+func (g *guildManager) CreateChannelNoCategory(b *Bot, GuildID, Name string) Channel {
 	endpoint := fmt.Sprintf("https://discord.com/api/v9/guilds/%s/channels", GuildID)
 	data := map[string]interface{}{
 		"name": Name,
@@ -43,7 +43,7 @@ func (g *GuildManager) CreateChannelNoCategory(b *Bot, GuildID, Name string) Cha
 }
 
 // Sets a channel's topic.
-func (g *GuildManager) SetChannelTopic(b *Bot, ChannelID, Topic string) {
+func (g *guildManager) SetChannelTopic(b *Bot, ChannelID, Topic string) {
 	endpoint := fmt.Sprintf("https://discord.com/api/v9/channels/%s", ChannelID)
 	data := map[string]interface{}{
 		"topic": Topic,
@@ -52,7 +52,7 @@ func (g *GuildManager) SetChannelTopic(b *Bot, ChannelID, Topic string) {
 }
 
 // Sets an user's nickname.
-func (g *GuildManager) SetUserNickname(b *Bot, GuildID, Member, Nickname string) User {
+func (g *guildManager) SetUserNickname(b *Bot, GuildID, Member, Nickname string) User {
 	endpoint := fmt.Sprintf("https://discord.com/api/v9/guilds/%s/members/%s", GuildID, Member)
 	data := map[string]interface{}{
 		"nick": Nickname,
@@ -64,7 +64,7 @@ func (g *GuildManager) SetUserNickname(b *Bot, GuildID, Member, Nickname string)
 
 // Creates a Discord invite to the given channel.
 // The invite options are specified using GuildInviteOptions.
-func (g *GuildManager) CreateInvite(b *Bot, ChannelID string, options GuildInviteOptions) GuildInvite {
+func (g *guildManager) CreateInvite(b *Bot, ChannelID string, options GuildInviteOptions) GuildInvite {
 	endpoint := fmt.Sprintf("https://discord.com/api/v9/channels/%s/invites", ChannelID)
 	data := map[string]interface{}{
 		"max_age":     options.MaxAge,
@@ -80,7 +80,7 @@ func (g *GuildManager) CreateInvite(b *Bot, ChannelID string, options GuildInvit
 
 // Creates a timeout.
 // The timeout duration is specified using TimeoutOptions.
-func (g *GuildManager) CreateTimeout(b *Bot, GuildID, UserID string, Options TimeoutOptions) {
+func (g *guildManager) CreateTimeout(b *Bot, GuildID, UserID string, Options TimeoutOptions) {
 	endpoint := fmt.Sprintf("https://discord.com/api/v9/guilds/%s/members/%s", GuildID, UserID)
 	timestamp := time.Now().UTC().AddDate(0, 0, Options.DaysToAdd).Add(time.Minute * time.Duration(Options.MinutesToAdd)).Format(time.RFC3339)
 	data := map[string]interface{}{
@@ -90,7 +90,7 @@ func (g *GuildManager) CreateTimeout(b *Bot, GuildID, UserID string, Options Tim
 }
 
 // Removes a timeout.
-func (g *GuildManager) RemoveTimeout(b *Bot, GuildID, UserID string) {
+func (g *guildManager) RemoveTimeout(b *Bot, GuildID, UserID string) {
 	endpoint := fmt.Sprintf("https://discord.com/api/v9/guilds/%s/members/%s", GuildID, UserID)
 	data := map[string]interface{}{
 		"communication_disabled_until": nil,
