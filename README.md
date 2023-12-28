@@ -6,6 +6,8 @@ FrostGo is still WIP (work in progress), which means its unfinished.
 Simply do `go get github.com/g0dswisdom/frostgo` in your terminal.
 # Documentation
 This project currently lacks documentation, but you can create more commands using the example below.
+
+There are examples in the examples folder.
 # Selfbot example
 ```go
 package main
