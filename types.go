@@ -215,3 +215,18 @@ type StickerPacks struct {
 	PremiumTypeReqired int         `json:"premium_type_required"`
 	StickerPack        StickerPack `json:"sticker_pack"`
 }
+
+type Webhook struct {
+	ID            string   `json:"id"`
+	Type          int      `json:"type"`
+	GuildID       *string  `json:"guild_id,omitempty"`
+	ChannelID     *string  `json:"channel_id,omitempty"`
+	User          *User    `json:"user,omitempty"`
+	Name          *string  `json:"name,omitempty"`
+	Avatar        *string  `json:"avatar,omitempty"`
+	Token         *string  `json:"token,omitempty"`
+	ApplicationID *string  `json:"application_id,omitempty"`
+	SourceGuild   *Guild   `json:"source_guild,omitempty"`
+	SourceChannel *Channel `json:"source_channel,omitempty"`
+	URL           *string  `json:"url,omitempty"`
+}

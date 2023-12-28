@@ -195,6 +195,5 @@ func (b *Bot) sendHeartbeat(interval int) {
 		if err := b.conn.WriteMessage(websocket.TextMessage, []byte(payload)); err != nil {
 			return
 		}
-		fmt.Println("Sent heartbeat")
 	}
 }

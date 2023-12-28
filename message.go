@@ -60,7 +60,13 @@ func (u *UserManager) SendTyping(b *Bot, ChannelID string) {
 }
 
 // Pins a message.
-func (u *UserManager) PinMessage(b *Bot, ChannelID, MessageID string) {
+func (g *GuildManager) PinMessage(b *Bot, ChannelID, MessageID string) {
 	endpoint := fmt.Sprintf("https://discord.com/api/v9/channels/%s/pins/%s", ChannelID, MessageID)
 	customRequest(b, "PUT", endpoint, nil, nil)
+}
+
+// Unpins a message.
+func (g *GuildManager) RemoveMessageFromPins(b *Bot, ChannelID, MessageID string) {
+	endpoint := fmt.Sprintf("https://discord.com/api/v9/channels/%s/pins/%s", ChannelID, MessageID)
+	customRequest(b, "DELETE", endpoint, nil, nil)
 }

@@ -1,15 +1,18 @@
 package FrostAPI
 
-import "fmt"
+import (
+	"fmt"
+)
 
 // Creates a new Discord webhook.
-func (w *WebhookManager) CreateWebhook(b *Bot, ChannelID, Name string) {
+func (w *WebhookManager) CreateWebhook(b *Bot, ChannelID, Name string) Webhook {
 	endpoint := fmt.Sprintf("https://discord.com/api/v9/channels/%s/webhooks", ChannelID)
-
 	data := map[string]interface{}{
 		"name": Name,
 	}
-	customRequest(b, "POST", endpoint, data, nil)
+	var webhook Webhook
+	decode(customRequest(b, "POST", endpoint, data, nil), &webhook)
+	return webhook
 }
 
 // Deletes a Discord webhook.
