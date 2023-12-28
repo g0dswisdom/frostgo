@@ -22,7 +22,7 @@ func main() {
 	bot := FrostAPI.NewBot("Discord token")
 
 	bot.On("ready", func() {
-		fmt.Println("[+] Frost selfbot is ready to use!")
+		fmt.Printf("[+] Logged in as %s\n", bot.Client.Username)
 	})
 
 	bot.On("messageCreate", func(message FrostAPI.Message) {

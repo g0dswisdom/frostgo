@@ -25,6 +25,7 @@ type GuildManager struct{}
 // Discord bot.
 type Bot struct {
 	Token          string
+	Client         User
 	eventListeners map[string][]interface{}
 	conn           *websocket.Conn
 	mutex          sync.Mutex
@@ -35,12 +36,23 @@ type Bot struct {
 
 // Bot functions and event emitter
 
+func (b *Bot) getInfo() User {
+	resp, err := b.Request(true, "GET", "https://discord.com/api/v9/users/@me", nil, nil)
+	if err != nil {
+		return User{}
+	}
+	var user User
+	decode(resp, &user)
+	return user
+}
+
 func NewBot(token string) *Bot {
 	bot := &Bot{
 		Token:          token,
 		eventListeners: make(map[string][]interface{}),
 	}
-
+	userInfo := bot.getInfo()
+	bot.Client = userInfo
 	go bot.connectToDiscord()
 	return bot
 }
