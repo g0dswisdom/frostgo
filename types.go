@@ -65,6 +65,21 @@ type User struct {
 
 // Discord guild
 
+type Webhook struct {
+	ID            string   `json:"id"`
+	Type          int      `json:"type"`
+	GuildID       *string  `json:"guild_id,omitempty"`
+	ChannelID     *string  `json:"channel_id,omitempty"`
+	User          *User    `json:"user,omitempty"`
+	Name          *string  `json:"name,omitempty"`
+	Avatar        *string  `json:"avatar,omitempty"`
+	Token         *string  `json:"token,omitempty"`
+	ApplicationID *string  `json:"application_id,omitempty"`
+	SourceGuild   *Guild   `json:"source_guild,omitempty"`
+	SourceChannel *Channel `json:"source_channel,omitempty"`
+	URL           *string  `json:"url,omitempty"`
+}
+
 type GuildInvite struct {
 	Type      int     `json:"type"`
 	Code      string  `json:"code"`
@@ -85,19 +100,148 @@ type GuildInviteOptions struct {
 	MaxUses int `json:"max_uses"`
 }
 
+type RoleTags struct {
+	BotID                 string `json:"bot_id,omitempty"`
+	IntegrationID         string `json:"integration_id,omitempty"`
+	PremiumSubscriber     *bool  `json:"premium_subscriber,omitempty"`
+	SubscriptionListingID string `json:"subscription_listing_id,omitempty"`
+	AvailableForPurchase  *bool  `json:"available_for_purchase,omitempty"`
+	GuildConnections      *bool  `json:"guild_connections,omitempty"`
+}
+
+type Role struct {
+	ID           string    `json:"id"`
+	Name         string    `json:"name"`
+	Color        int       `json:"color"`
+	Hoist        bool      `json:"hoist"`
+	Icon         *string   `json:"icon,omitempty"`
+	UnicodeEmoji *string   `json:"unicode_emoji,omitempty"`
+	Position     int       `json:"position"`
+	Permissions  string    `json:"permissions"`
+	Managed      bool      `json:"managed"`
+	Mentionable  bool      `json:"mentionable"`
+	Tags         *RoleTags `json:"tags,omitempty"`
+	Flags        int       `json:"flags"`
+}
+
+type Permission int64
+
+const (
+	CreateInstantInvite Permission = 1 << iota
+	KickMembers
+	BanMembers
+	Administrator
+	ManageChannels
+	ManageGuild
+	AddReactions
+	ViewAuditLog
+	PrioritySpeaker
+	Stream
+	ViewChannel
+	SendMessages
+	SendTTSMessage
+	ManageMessages
+	EmbedLinks
+	AttachFiles
+	ReadMessageHistory
+	MentionEveryone
+	UseExternalEmojis
+	ViewGuildInsights
+	Connect
+	Speak
+	MuteMembers
+	DeafenMembers
+	MoveMembers
+	UseVAD
+	ChangeNickname
+	ManageNicknames
+	ManageRoles
+	ManageWebhooks
+	ManageGuildExpressions
+	UseApplicationCommands
+	RequestToSpeak
+	ManageEvents
+	ManageThreads
+	CreatePublicThreads
+	CreatePrivateThreads
+	UseExternalStickers
+	SendMessagesInThreads
+	UseEmbeddedActivities
+	ModerateMembers
+	ViewCreatorMonetizationAnalytics
+	UseSoundboard
+	CreateGuildExpressions
+	CreateEvents
+	UseExternalSounds
+	SendVoiceMessages
+)
+
+type WelcomeScreen struct {
+	Description     *string                `json:"description,omitempty"`
+	WelcomeChannels []WelcomeScreenChannel `json:"welcome_channels,omitempty"`
+}
+
+type WelcomeScreenChannel struct {
+	ChannelID   string  `json:"channel_id"`
+	Description string  `json:"description"`
+	EmojiID     *string `json:"emoji_id,omitempty"`
+	EmojiName   *string `json:"emoji_name,omitempty"`
+}
+
+type Emoji struct {
+	ID            *string  `json:"id,omitempty"`
+	Name          *string  `json:"name,omitempty"`
+	Roles         []string `json:"roles,omitempty"`
+	User          *User    `json:"user,omitempty"`
+	RequireColons bool     `json:"require_colons,omitempty"`
+	Managed       bool     `json:"managed,omitempty"`
+	Animated      bool     `json:"animated,omitempty"`
+	Available     bool     `json:"available,omitempty"`
+}
+
 type Guild struct {
-	ID                       string   `json:"id"`
-	Name                     string   `json:"name"`
-	Splash                   *string  `json:"splash,omitempty"`
-	Banner                   *string  `json:"banner,omitempty"`
-	Description              *string  `json:"description,omitempty"`
-	Icon                     *string  `json:"icon,omitempty"`
-	Features                 []string `json:"features,omitempty"`
-	VerificationLevel        int      `json:"verification_level"`
-	VanityURLCode            *string  `json:"vanity_url_code,omitempty"`
-	NSFWLevel                int      `json:"nsfw_level"`
-	NSFW                     bool     `json:"nsfw"`
-	PremiumSubscriptionCount int      `json:"premium_subscription_count"`
+	ID                          string         `json:"id"`
+	Name                        string         `json:"name"`
+	Icon                        *string        `json:"icon,omitempty"`
+	Splash                      *string        `json:"splash,omitempty"`
+	DiscoverySplash             *string        `json:"discovery_splash,omitempty"`
+	Owner                       *bool          `json:"owner,omitempty"`
+	OwnerID                     string         `json:"owner_id"`
+	Permissions                 *string        `json:"permissions,omitempty"`
+	Region                      *string        `json:"region,omitempty"`
+	AfkChannelID                *string        `json:"afk_channel_id,omitempty"`
+	AfkTimeout                  int            `json:"afk_timeout"`
+	WidgetEnabled               *bool          `json:"widget_enabled,omitempty"`
+	WidgetChannelID             *string        `json:"widget_channel_id,omitempty"`
+	VerificationLevel           int            `json:"verification_level"`
+	DefaultMessageNotifications int            `json:"default_message_notifications"`
+	ExplicitContentFilter       int            `json:"explicit_content_filter"`
+	Roles                       []Role         `json:"roles"`
+	Emojis                      []Emoji        `json:"emojis"`
+	Features                    []string       `json:"features"`
+	MfaLevel                    int            `json:"mfa_level"`
+	ApplicationID               *string        `json:"application_id,omitempty"`
+	SystemChannelID             *string        `json:"system_channel_id,omitempty"`
+	SystemChannelFlags          int            `json:"system_channel_flags"`
+	RulesChannelID              *string        `json:"rules_channel_id,omitempty"`
+	MaxPresences                *int           `json:"max_presences,omitempty"`
+	MaxMembers                  int            `json:"max_members"`
+	VanityURLCode               *string        `json:"vanity_url_code,omitempty"`
+	Description                 *string        `json:"description,omitempty"`
+	Banner                      *string        `json:"banner,omitempty"`
+	PremiumTier                 int            `json:"premium_tier"`
+	PremiumSubscriptionCount    *int           `json:"premium_subscription_count,omitempty"`
+	PreferredLocale             string         `json:"preferred_locale"`
+	PublicUpdatesChannelID      *string        `json:"public_updates_channel_id,omitempty"`
+	MaxVideoChannelUsers        *int           `json:"max_video_channel_users,omitempty"`
+	MaxStageVideoChannelUsers   *int           `json:"max_stage_video_channel_users,omitempty"`
+	ApproximateMemberCount      *int           `json:"approximate_member_count,omitempty"`
+	ApproximatePresenceCount    *int           `json:"approximate_presence_count,omitempty"`
+	WelcomeScreen               *WelcomeScreen `json:"welcome_screen,omitempty"`
+	NSFWLevel                   int            `json:"nsfw_level"`
+	Stickers                    []Sticker      `json:"stickers,omitempty"`
+	PremiumProgressBarEnabled   *bool          `json:"premium_progress_bar_enabled,omitempty"`
+	SafetyAlertsChannelID       *string        `json:"safety_alerts_channel_id,omitempty"`
 }
 
 type GuildMember struct {
@@ -214,19 +358,4 @@ type StickerPacks struct {
 	HasAccess          bool        `json:"has_access"`
 	PremiumTypeReqired int         `json:"premium_type_required"`
 	StickerPack        StickerPack `json:"sticker_pack"`
-}
-
-type Webhook struct {
-	ID            string   `json:"id"`
-	Type          int      `json:"type"`
-	GuildID       *string  `json:"guild_id,omitempty"`
-	ChannelID     *string  `json:"channel_id,omitempty"`
-	User          *User    `json:"user,omitempty"`
-	Name          *string  `json:"name,omitempty"`
-	Avatar        *string  `json:"avatar,omitempty"`
-	Token         *string  `json:"token,omitempty"`
-	ApplicationID *string  `json:"application_id,omitempty"`
-	SourceGuild   *Guild   `json:"source_guild,omitempty"`
-	SourceChannel *Channel `json:"source_channel,omitempty"`
-	URL           *string  `json:"url,omitempty"`
 }

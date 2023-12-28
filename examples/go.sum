@@ -1,0 +1,6 @@
+github.com/g0dswisdom/frostgo v0.0.0-20231228173030-2a36aa8886c6 h1:zkgo4JSNfwBjN4qON6Ay7Ib4vxr6KXTRd874k/XZbpI=
+github.com/g0dswisdom/frostgo v0.0.0-20231228173030-2a36aa8886c6/go.mod h1:DEhMF+azzskznNtFgfX4KElQqkhG4E6iZ657ORzbW9A=
+github.com/gorilla/websocket v1.5.1 h1:gmztn0JnHVt9JZquRuzLw3g4wouNVzKL15iLr/zn/QY=
+github.com/gorilla/websocket v1.5.1/go.mod h1:x3kM2JMyaluk02fnUJpQuwD2dCS5NDG2ZHL0uE0tcaY=
+golang.org/x/net v0.17.0 h1:pVaXccu2ozPjCXewfr1S7xza/zcXTity9cCdXQYSjIM=
+golang.org/x/net v0.17.0/go.mod h1:NxSsAGuq816PNPmqtQdLE42eU2Fs7NoRIZrHJAlaCOE=
