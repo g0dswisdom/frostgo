@@ -185,14 +185,13 @@ func (r *Role) HasPermission(permission Permission) bool {
 	return (rolePermissions & int64(permission)) == int64(permission)
 }
 
-// Checks if an user has the specified role, in the given guild. ILL ADD LATER!!
-/*
+// Checks if an user has the specified role, in the given guild.
 func (g *GuildManager) HasRole(b *Bot, GuildID, RoleID, UserID string) bool {
 	roles := g.GetRolesForUser(b, GuildID, UserID)
 	for _, role := range roles {
-		if role == RoleID {
+		if role.ID == RoleID {
 			return true
 		}
 	}
 	return false
-}*/
+}
