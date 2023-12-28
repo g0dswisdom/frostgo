@@ -66,6 +66,8 @@ func (g *GuildManager) SetUserNickname(b *Bot, GuildID, Member, Nickname string)
 
 // Creates a Discord invite to the given channel.
 // The invite options are specified using GuildInviteOptions.
+//
+// MaxAge is specified in miliseconds.
 func (g *GuildManager) CreateInvite(b *Bot, ChannelID string, options GuildInviteOptions) GuildInvite {
 	endpoint := fmt.Sprintf("https://discord.com/api/v9/channels/%s/invites", ChannelID)
 	data := map[string]interface{}{

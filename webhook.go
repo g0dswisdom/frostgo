@@ -20,3 +20,17 @@ func (w *WebhookManager) DeleteWebhook(b *Bot, WebhookID string) {
 	endpoint := fmt.Sprintf("https://discord.com/api/v9/webhooks/%s", WebhookID)
 	customRequest(b, "DELETE", endpoint, nil, nil)
 }
+
+// Returns all of the webhooks from the specified channel.
+func (w *WebhookManager) GetChannelWebhooks(b *Bot, ChannelID string) []Webhook {
+	endpoint := fmt.Sprintf("https://discord.com/api/v9/channels/%s/webhooks", ChannelID)
+	resp, err := b.Request(true, "GET", endpoint, nil, nil)
+	if err != nil {
+		return []Webhook{}
+	}
+
+	var webhooks []Webhook
+	decode(resp, &webhooks)
+
+	return webhooks
+}

@@ -7,6 +7,7 @@ import (
 	"time"
 )
 
+// Helper function to make requests. Sometimes refuses to work with responses that return arras.
 func customRequest(b *Bot, method, endpoint string, data map[string]interface{}, headers map[string]interface{}) *http.Response {
 	response, err := b.Request(true, method, endpoint, data, nil)
 	if err != nil {
