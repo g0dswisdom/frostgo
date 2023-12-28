@@ -97,3 +97,11 @@ func (g *GuildManager) RemoveTimeout(b *Bot, GuildID, UserID string) {
 	}
 	customRequest(b, "PATCH", endpoint, data, nil)
 }
+
+// Returns a GuildMember object. Not fully functional.
+func (g *GuildManager) GetGuildMember(b *Bot, GuildID, UserID string) GuildMember {
+	endpoint := fmt.Sprintf("https://discord.com/api/v9/guilds/%s/members/%s", GuildID, UserID)
+	var member GuildMember
+	decode(customRequest(b, "GET", endpoint, nil, nil), &member)
+	return member
+}

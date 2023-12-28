@@ -33,9 +33,12 @@ type Message struct {
 		Avatar        string `json:"avatar"`
 		Discriminator string `json:"discriminator"`
 	} `json:"author"`
+	MentionEveryone   bool              `json:"mention_everyone"`
+	Mentions          []User            `json:"mentions"`
 	Timestamp         string            `json:"timestamp"`
 	MessageReference  *MessageReference `json:"message_reference,omitempty"`
 	ReferencedMessage *Message          `json:"referenced_message,omitempty"`
+	TTS               bool              `json:"tts"`
 }
 
 // Discord user
@@ -190,4 +193,25 @@ type Channel struct {
 type TimeoutOptions struct {
 	DaysToAdd    int
 	MinutesToAdd int
+}
+
+type Sticker struct {
+	ID string `json:"id"`
+}
+
+type StickerPack struct {
+	ID             string    `json:"id"`
+	Stickers       []Sticker `json:"stickers"`
+	Name           string    `json:"name"`
+	SKUID          string    `json:"sku_id"`
+	CoverStickerID string    `json:"cover_sticker_id"`
+}
+
+type StickerPacks struct {
+	UserID             string      `json:"user_id"`
+	PackID             string      `json:"pack_id"`
+	EntitlementID      string      `json:"entitlement_id"`
+	HasAccess          bool        `json:"has_access"`
+	PremiumTypeReqired int         `json:"premium_type_required"`
+	StickerPack        StickerPack `json:"sticker_pack"`
 }
