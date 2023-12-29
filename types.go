@@ -63,6 +63,27 @@ type User struct {
 	AvatarDecoration *string `json:"avatar_decoration,omitempty"`
 }
 
+type AvatarDecorationData struct {
+	Asset string `json:"asset"`
+	SKUID string `json:"sku_id"`
+}
+
+type Friend struct {
+	ID       string  `json:"id"`
+	Type     int     `json:"type"`
+	Nickname *string `json:"nickname,omitempty"`
+	User     struct {
+		ID                   string                `json:"id"`
+		Username             string                `json:"username"`
+		GlobalName           string                `json:"global_name"`
+		Avatar               string                `json:"avatar"`
+		AvatarDecorationData *AvatarDecorationData `json:"avatar_decoration_data,omitempty"`
+		Discriminator        string                `json:"discriminator"`
+		PublicFlags          int                   `json:"public_flags"`
+	} `json:"user"`
+	Since string `json:"since"`
+}
+
 // Discord guild
 
 type Webhook struct {

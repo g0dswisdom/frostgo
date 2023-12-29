@@ -35,3 +35,17 @@ func (u *UserManager) CreateFriendInvite(b *Bot) (GuildInvite, error) {
 
 	return invite, nil
 }
+
+func (u *UserManager) GetFriends(b *Bot) ([]Friend, error) {
+	resp, err := b.Request(true, http.MethodGet, "users/@me/relationships", nil, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var friends []Friend
+	if err := decode(resp, &friends); err != nil {
+		return nil, err
+	}
+
+	return friends, nil
+}
