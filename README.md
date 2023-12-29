@@ -4,7 +4,7 @@ FrostGo is a fast and efficient Discord API wrapper developed in Go, designed sp
 Please note: FrostGo is a work in progress (WIP), and some features might still be under development. Updates are made regularly by our single-person team.
 # Features
 * **Speed** - FrostGo is created in **Go**, which is one of the fastest programming languages.
-* **User-Friendly** - FrostGo ensures a straightforward setup and smooth implementation for creating selfbots. It's designed to be user-friendly, even for those new to Go.
+* **User-Friendly** - FrostGo makes it simple for users to create selfbots. It's designed to be user-friendly, even for those new to Go.
 * **Stability** - FrostGo is built to provide a stable and reliable package for the Discord API.
 # Installation
 To install FrostGo, use the following command in your terminal:
@@ -13,7 +13,7 @@ To install FrostGo, use the following command in your terminal:
 # Documentation
 We're currently working on our documentation. For now, explore the example below to create new commands.
 
-Additionally, check out the command examples in the `examples` folder for guidance.
+You can also check out the command examples in the `examples` folder.
 
 You can also use [this](https://pkg.go.dev/github.com/g0dswisdom/frostgo) for API reference.
 # Selfbot example
