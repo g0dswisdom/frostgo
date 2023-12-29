@@ -31,7 +31,7 @@ func (g *GuildManager) BanUser(b *Bot, GuildID, User string) error {
 	return nil
 }
 
-// Creates a new channel. Returns a Channel object, along with any encountered errors.
+// Creates a new channel. Returns a Channel object.
 func (g *GuildManager) CreateChannel(b *Bot, GuildID, CategoryID, Name string) (Channel, error) {
 	endpoint := fmt.Sprintf("guilds/%s/channels", GuildID)
 	data := map[string]interface{}{
@@ -52,8 +52,8 @@ func (g *GuildManager) CreateChannel(b *Bot, GuildID, CategoryID, Name string) (
 	return channel, nil
 }
 
-// Creates a new channel, with no category. Returns a Channel object, along with any encountered errors.
-func (g *GuildManager) CreateChannelNoCategory(b *Bot, GuildID, CategoryID, Name string) (Channel, error) {
+// Creates a new channel, with no category. Returns a Channel object.
+func (g *GuildManager) CreateChannelNoCategory(b *Bot, GuildID, Name string) (Channel, error) {
 	endpoint := fmt.Sprintf("guilds/%s/channels", GuildID)
 	data := map[string]interface{}{
 		"name": Name,
@@ -87,7 +87,7 @@ func (g *GuildManager) SetChannelTopic(b *Bot, ChannelID, Topic string) error {
 	return nil
 }
 
-// Sets an user's nickname. Returns an User object, along with any encountered errors.
+// Sets an user's nickname. Returns an User object.
 func (g *GuildManager) SetUserNickname(b *Bot, GuildID, Member, Nickname string) (User, error) {
 	endpoint := fmt.Sprintf("guilds/%s/members/%s", GuildID, Member)
 	data := map[string]interface{}{
@@ -107,7 +107,7 @@ func (g *GuildManager) SetUserNickname(b *Bot, GuildID, Member, Nickname string)
 	return user, nil
 }
 
-// Creates a Discord invite to the given channel. Returns a GuildInvite object, along with any encountered errors.
+// Creates a Discord invite to the given channel. Returns a GuildInvite object.
 // The invite options are specified using GuildInviteOptions.
 //
 // MaxAge is specified in miliseconds.
@@ -135,7 +135,7 @@ func (g *GuildManager) CreateInvite(b *Bot, ChannelID string, options GuildInvit
 }
 
 // Creates a timeout.
-// The timeout duration is specified using TimeoutOptions.
+// The timeout duration is specified using TimeoutOpt ions.
 func (g *GuildManager) CreateTimeout(b *Bot, GuildID, UserID string, Options TimeoutOptions) error {
 	endpoint := fmt.Sprintf("guilds/%s/members/%s", GuildID, UserID)
 	timestamp := time.Now().UTC().AddDate(0, 0, Options.DaysToAdd).Add(time.Minute * time.Duration(Options.MinutesToAdd)).Format(time.RFC3339)
@@ -182,7 +182,7 @@ func (g *GuildManager) GetGuildMember(b *Bot, GuildID, UserID string) (GuildMemb
 	return member, nil
 }
 
-// Returns a Guild object, along with any encountered errors.
+// Returns a Guild object.
 func (g *GuildManager) GetGuild(b *Bot, GuildID string) (Guild, error) {
 	endpoint := fmt.Sprintf("guilds/%s", GuildID)
 	resp, err := b.Request(true, http.MethodGet, endpoint, nil, nil)
@@ -198,10 +198,10 @@ func (g *GuildManager) GetGuild(b *Bot, GuildID string) (Guild, error) {
 	return guild, nil
 }
 
-// Returns an array of Channel objects, along with any encountered errors.
+// Returns an array of Channel objects.
 func (g *GuildManager) GetGuildChannels(b *Bot, GuildID string) ([]Channel, error) {
 	endpoint := fmt.Sprintf("guilds/%s/channels", GuildID)
-	resp, err := b.Request(true, "GET", endpoint, nil, nil)
+	resp, err := b.Request(true, http.MethodGet, endpoint, nil, nil)
 	if err != nil {
 		return []Channel{}, err
 	}
@@ -214,10 +214,10 @@ func (g *GuildManager) GetGuildChannels(b *Bot, GuildID string) ([]Channel, erro
 	return channels, nil
 }
 
-// Returns an array of role IDs, along with any encountered errors.
+// Returns an array of role IDs.
 func (g *GuildManager) GetRolesForUser(b *Bot, GuildID, UserID string) ([]Role, error) {
 	endpoint := fmt.Sprintf("guilds/%s/members/%s", GuildID, UserID)
-	resp, err := b.Request(true, "GET", endpoint, nil, nil)
+	resp, err := b.Request(true, http.MethodGet, endpoint, nil, nil)
 	if err != nil {
 		return []Role{}, err
 	}
@@ -268,4 +268,36 @@ func (g *GuildManager) HasRole(b *Bot, GuildID, RoleID, UserID string) bool {
 	}
 
 	return false
+}
+
+// Returns a GuildInvite object.
+func (g *GuildManager) GetInvite(b *Bot, Invite string) (GuildInvite, error) {
+	endpoint := fmt.Sprintf("invites/%s", Invite)
+	resp, err := b.Request(true, http.MethodGet, endpoint, nil, nil)
+	if err != nil {
+		return GuildInvite{}, err
+	}
+
+	var invite GuildInvite
+	if err := decode(resp, &invite); err != nil {
+		return GuildInvite{}, err
+	}
+
+	return invite, nil
+}
+
+// Returns a Channel object.
+func (g *GuildManager) GetChannel(b *Bot, ChannelID string) (Channel, error) {
+	endpoint := fmt.Sprintf("channels/%s", ChannelID)
+	resp, err := b.Request(true, http.MethodGet, endpoint, nil, nil)
+	if err != nil {
+		return Channel{}, err
+	}
+
+	var channel Channel
+	if err := decode(resp, &channel); err != nil {
+		return Channel{}, err
+	}
+
+	return channel, nil
 }

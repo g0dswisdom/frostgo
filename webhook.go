@@ -5,7 +5,7 @@ import (
 	"net/http"
 )
 
-// Creates a new Discord webhook. Returns a Webhook object, along with any encountered errors.
+// Creates a new Discord webhook. Returns a Webhook object.
 func (w *WebhookManager) CreateWebhook(b *Bot, ChannelID, Name string) (Webhook, error) {
 	endpoint := fmt.Sprintf("channels/%s/webhooks", ChannelID)
 	data := map[string]interface{}{
@@ -36,7 +36,7 @@ func (w *WebhookManager) DeleteWebhook(b *Bot, WebhookID string) error {
 	return nil
 }
 
-// Returns all of the webhooks from the specified channel, along with any encountered errors.
+// Returns all of the webhooks from the specified channel.
 func (w *WebhookManager) GetChannelWebhooks(b *Bot, ChannelID string) ([]Webhook, error) {
 	endpoint := fmt.Sprintf("channels/%s/webhooks", ChannelID)
 

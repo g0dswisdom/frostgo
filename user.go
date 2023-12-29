@@ -1,6 +1,8 @@
 package FrostAPI
 
-import "net/http"
+import (
+	"net/http"
+)
 
 // Changes status.
 func (u *UserManager) ChangeStatus(b *Bot, Options StatusOptions) error {
@@ -21,7 +23,7 @@ func (u *UserManager) ChangeStatus(b *Bot, Options StatusOptions) error {
 
 // TODO: Settings
 
-// Creates a Friend Invite. Returns a GuildInvite object, along with any encountered errors.
+// Creates a Friend Invite. Returns a GuildInvite object
 func (u *UserManager) CreateFriendInvite(b *Bot) (GuildInvite, error) {
 	resp, err := b.Request(true, http.MethodPost, "users/@me/invites", nil, nil)
 	if err != nil {
@@ -36,6 +38,7 @@ func (u *UserManager) CreateFriendInvite(b *Bot) (GuildInvite, error) {
 	return invite, nil
 }
 
+// Returns an array of Friend objects.
 func (u *UserManager) GetFriends(b *Bot) ([]Friend, error) {
 	resp, err := b.Request(true, http.MethodGet, "users/@me/relationships", nil, nil)
 	if err != nil {

@@ -3,8 +3,11 @@ package FrostAPI
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
+	"regexp"
+	"strconv"
 	"sync"
 	"time"
 
@@ -47,6 +50,62 @@ func (b *Bot) getInfo() User {
 	var user User
 	decode(resp, &user)
 	return user
+}
+
+// Returns Discord's build number.
+func getBuildNumber() (int, error) { // see https://github.com/Pixens/Discord-Build-Number
+	// I couldn't get this working with b.Request. Oh well.
+	client := &http.Client{}
+	req, err := http.NewRequest("GET", "https://discord.com/login", nil)
+	if err != nil {
+		return 0, err
+	}
+	req.Header.Set("Accept-Encoding", "identity")
+
+	resp, err := client.Do(req)
+	if err != nil {
+		return 0, err
+	}
+	defer resp.Body.Close()
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return 0, err
+	}
+
+	page := string(body)
+	re := regexp.MustCompile(`assets/(sentry\.\w+)\.js`)
+	endpoint := fmt.Sprintf("https://discord.com/assets/%s.js", re.FindStringSubmatch(page)[1])
+
+	req2, err := http.NewRequest("GET", endpoint, nil)
+	if err != nil {
+		return 0, err
+	}
+	req2.Header.Set("Accept-Encoding", "identity")
+
+	resp2, err := client.Do(req2)
+	if err != nil {
+		return 0, err
+	}
+	defer resp2.Body.Close()
+
+	buildBody, err := io.ReadAll(resp2.Body)
+	if err != nil {
+		return 0, err
+	}
+
+	regex := regexp.MustCompile(`buildNumber\D+(\d+)"`)
+	builds := regex.FindStringSubmatch(string(buildBody))
+
+	if len(builds) >= 2 {
+		build, err := strconv.Atoi(builds[1])
+		if err != nil {
+			return 0, err
+		}
+		return build, nil
+	}
+
+	return 1, nil
 }
 
 func NewBot(token string) *Bot {
@@ -101,15 +160,31 @@ func (b *Bot) connectToDiscord() {
 }
 
 func (b *Bot) onOpen() {
+	build, err := getBuildNumber()
+	if err != nil {
+		build = 256231 // current build number as of now
+	}
+
 	payload := map[string]interface{}{
 		"op": 2,
 		"d": map[string]interface{}{
 			"token":   b.Token,
 			"intents": 3241725,
 			"properties": map[string]interface{}{
-				"$os":      "linux",
-				"$browser": "my_library",
-				"$device":  "my_library",
+				"$os":                      "Windows",
+				"$browser":                 "Firefox",
+				"$device":                  "",
+				"system_locale":            "en-US",
+				"browser_user_agent":       "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0",
+				"browser_version":          "120.0",
+				"os_version":               "10",
+				"referrer":                 "",
+				"referring_domain":         "",
+				"referrer_current":         "",
+				"referring_domain_current": "",
+				"release_channel":          "stable",
+				"client_build_number":      build,
+				"client_event_source":      nil,
 			},
 		},
 	}
