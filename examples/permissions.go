@@ -16,7 +16,13 @@ func perm() {
 	bot.On("messageCreate", func(message FrostAPI.Message) {
 		if message.Content == "!ping" {
 			bot.User.DeleteMessage(bot, message.ChannelID, message.ID)
-			roles := bot.Guild.GetRolesForUser(bot, message.GuildID, message.Author.ID)
+			roles, err := bot.Guild.GetRolesForUser(bot, message.GuildID, message.Author.ID)
+
+			if err != nil {
+				fmt.Println(err)
+				return
+			}
+
 			for _, role := range roles {
 				if role.HasPermission(FrostAPI.Administrator) {
 					bot.User.SendMessage(bot, message.ChannelID, "User has a role with Administrator permissions! :white_check_mark:")

@@ -7,7 +7,9 @@ import (
 	"time"
 )
 
-// Helper function to make requests. Sometimes refuses to work with responses that return arras.
+// Helper function to make requests. Sometimes refuses to work with responses that return arrays.
+//
+// Deprecated: I don't really like this function
 func customRequest(b *Bot, method, endpoint string, data map[string]interface{}, headers map[string]interface{}) *http.Response {
 	response, err := b.Request(true, method, endpoint, data, nil)
 	if err != nil {
@@ -17,8 +19,13 @@ func customRequest(b *Bot, method, endpoint string, data map[string]interface{},
 	return response
 }
 
-func decode(resp *http.Response, target interface{}) {
-	json.NewDecoder(resp.Body).Decode(target)
+// Helper function for decoding JSON.
+func decode(resp *http.Response, target interface{}) error {
+	err := json.NewDecoder(resp.Body).Decode(target)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 var epoch = time.Date(2015, 1, 1, 0, 0, 0, 0, time.UTC).UnixNano() / 1e6

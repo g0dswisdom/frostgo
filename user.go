@@ -1,21 +1,37 @@
 package FrostAPI
 
+import "net/http"
+
 // Changes status.
-func (u *UserManager) ChangeStatus(b *Bot, Status, Content string) {
+func (u *UserManager) ChangeStatus(b *Bot, Options StatusOptions) error {
 	data := map[string]interface{}{
-		"status": Status,
+		"status": Options.Status,
 		"custom_status": map[string]string{
-			"text": Content,
+			"text": Options.Content,
 		},
 	}
-	customRequest(b, "PATCH", "https://discord.com/api/v9/users/@me/settings", data, nil)
+
+	_, err := b.Request(true, http.MethodPatch, "users/@me/settings", data, nil)
+	if err != nil {
+		return err
+	}
+	return nil
+	//customRequest(b, "PATCH", "https://discord.com/api/v9/users/@me/settings", data, nil)
 }
 
 // TODO: Settings
 
-// Creates a Friend Invite. Returns a GuildInvite object.
-func (u *UserManager) CreateFriendInvite(b *Bot) GuildInvite {
+// Creates a Friend Invite. Returns a GuildInvite object, along with any encountered errors.
+func (u *UserManager) CreateFriendInvite(b *Bot) (GuildInvite, error) {
+	resp, err := b.Request(true, http.MethodPost, "users/@me/invites", nil, nil)
+	if err != nil {
+		return GuildInvite{}, err
+	}
+
 	var invite GuildInvite
-	decode(customRequest(b, "POST", "https://discord.com/api/v9/users/@me/invites", nil, nil), &invite)
-	return invite
+	if err := decode(resp, &invite); err != nil {
+		return GuildInvite{}, err
+	}
+
+	return invite, nil
 }

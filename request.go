@@ -12,7 +12,7 @@ func (b *Bot) Request(auth bool, method, endpoint string, data interface{}, head
 	autoHeaders := map[string]string{
 		"User-Agent": "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) discord/1.0.9018 Chrome/108.0.5359.215 Electron/22.3.24 Safari/537.36",
 	}
-
+	endpoint = fmt.Sprintf("https://discord.com/api/v9/%s", endpoint)
 	req, err := http.NewRequest(method, endpoint, nil)
 	if err != nil {
 		return nil, err

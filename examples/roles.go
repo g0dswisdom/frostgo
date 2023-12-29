@@ -16,7 +16,13 @@ func roles() {
 	bot.On("messageCreate", func(message FrostAPI.Message) {
 		if message.Content == "!roles" {
 			bot.User.DeleteMessage(bot, message.ChannelID, message.ID)
-			roles := bot.Guild.GetRolesForUser(bot, message.GuildID, message.Author.ID)
+			roles, err := bot.Guild.GetRolesForUser(bot, message.GuildID, message.Author.ID)
+
+			if err != nil {
+				fmt.Println(err)
+				return
+			}
+
 			for _, role := range roles {
 				fmt.Println(role.Name)
 			}

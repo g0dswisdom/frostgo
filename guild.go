@@ -1,75 +1,118 @@
 package FrostAPI
 
 import (
-	"encoding/json"
 	"fmt"
+	"net/http"
 	"strconv"
 	"time"
 )
 
 // Kicks an user.
-func (g *GuildManager) KickUser(b *Bot, GuildID, User string) {
-	endpoint := fmt.Sprintf("https://discord.com/api/v9/guilds/%s/members/%s", GuildID, User)
-	customRequest(b, "DELETE", endpoint, nil, nil)
+func (g *GuildManager) KickUser(b *Bot, GuildID, User string) error {
+	endpoint := fmt.Sprintf("guilds/%s/members/%s", GuildID, User)
+
+	_, err := b.Request(true, http.MethodDelete, endpoint, nil, nil)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 // Bans an user.
-func (g *GuildManager) BanUser(b *Bot, GuildID, User string) {
-	endpoint := fmt.Sprintf("https://discord.com/api/v9/guilds/%s/bans/%s", GuildID, User)
-	customRequest(b, "PUT", endpoint, nil, nil)
+func (g *GuildManager) BanUser(b *Bot, GuildID, User string) error {
+	endpoint := fmt.Sprintf("guilds/%s/bans/%s", GuildID, User)
+
+	_, err := b.Request(true, http.MethodPut, endpoint, nil, nil)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
-// Creates a new channel.
-func (g *GuildManager) CreateChannel(b *Bot, GuildID, CategoryID, Name string) Channel {
-	endpoint := fmt.Sprintf("https://discord.com/api/v9/guilds/%s/channels", GuildID)
+// Creates a new channel. Returns a Channel object, along with any encountered errors.
+func (g *GuildManager) CreateChannel(b *Bot, GuildID, CategoryID, Name string) (Channel, error) {
+	endpoint := fmt.Sprintf("guilds/%s/channels", GuildID)
 	data := map[string]interface{}{
 		"name":      Name,
 		"parent_id": CategoryID,
 		"type":      0,
 	}
+
+	resp, err := b.Request(true, http.MethodPost, endpoint, data, nil)
+	if err != nil {
+		return Channel{}, err
+	}
+
 	var channel Channel
-	decode(customRequest(b, "POST", endpoint, data, nil), &channel)
-	return channel
+	if err := decode(resp, &channel); err != nil {
+		return Channel{}, err
+	}
+	return channel, nil
 }
 
-// Creates a new channel, with no category.
-func (g *GuildManager) CreateChannelNoCategory(b *Bot, GuildID, Name string) Channel {
-	endpoint := fmt.Sprintf("https://discord.com/api/v9/guilds/%s/channels", GuildID)
+// Creates a new channel, with no category. Returns a Channel object, along with any encountered errors.
+func (g *GuildManager) CreateChannelNoCategory(b *Bot, GuildID, CategoryID, Name string) (Channel, error) {
+	endpoint := fmt.Sprintf("guilds/%s/channels", GuildID)
 	data := map[string]interface{}{
 		"name": Name,
 		"type": 0,
 	}
+
+	resp, err := b.Request(true, http.MethodPost, endpoint, data, nil)
+	if err != nil {
+		return Channel{}, err
+	}
+
 	var channel Channel
-	decode(customRequest(b, "POST", endpoint, data, nil), &channel)
-	return channel
+	if err := decode(resp, &channel); err != nil {
+		return Channel{}, err
+	}
+	return channel, nil
 }
 
 // Sets a channel's topic.
-func (g *GuildManager) SetChannelTopic(b *Bot, ChannelID, Topic string) {
-	endpoint := fmt.Sprintf("https://discord.com/api/v9/channels/%s", ChannelID)
+func (g *GuildManager) SetChannelTopic(b *Bot, ChannelID, Topic string) error {
+	endpoint := fmt.Sprintf("channels/%s", ChannelID)
 	data := map[string]interface{}{
 		"topic": Topic,
 	}
-	customRequest(b, "PATCH", endpoint, data, nil)
+
+	_, err := b.Request(true, http.MethodPatch, endpoint, data, nil)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
-// Sets an user's nickname.
-func (g *GuildManager) SetUserNickname(b *Bot, GuildID, Member, Nickname string) User {
-	endpoint := fmt.Sprintf("https://discord.com/api/v9/guilds/%s/members/%s", GuildID, Member)
+// Sets an user's nickname. Returns an User object, along with any encountered errors.
+func (g *GuildManager) SetUserNickname(b *Bot, GuildID, Member, Nickname string) (User, error) {
+	endpoint := fmt.Sprintf("guilds/%s/members/%s", GuildID, Member)
 	data := map[string]interface{}{
 		"nick": Nickname,
 	}
+
+	resp, err := b.Request(true, http.MethodPatch, endpoint, data, nil)
+	if err != nil {
+		return User{}, err
+	}
+
 	var user User
-	decode(customRequest(b, "PATCH", endpoint, data, nil), &user)
-	return user
+	if err := decode(resp, &user); err != nil {
+		return User{}, err
+	}
+
+	return user, nil
 }
 
-// Creates a Discord invite to the given channel.
+// Creates a Discord invite to the given channel. Returns a GuildInvite object, along with any encountered errors.
 // The invite options are specified using GuildInviteOptions.
 //
 // MaxAge is specified in miliseconds.
-func (g *GuildManager) CreateInvite(b *Bot, ChannelID string, options GuildInviteOptions) GuildInvite {
-	endpoint := fmt.Sprintf("https://discord.com/api/v9/channels/%s/invites", ChannelID)
+func (g *GuildManager) CreateInvite(b *Bot, ChannelID string, options GuildInviteOptions) (GuildInvite, error) {
+	endpoint := fmt.Sprintf("channels/%s/invites", ChannelID)
 	data := map[string]interface{}{
 		"max_age":     options.MaxAge,
 		"max_uses":    options.MaxUses,
@@ -77,98 +120,121 @@ func (g *GuildManager) CreateInvite(b *Bot, ChannelID string, options GuildInvit
 		"temporary":   false,
 		"validate":    nil,
 	}
+
+	resp, err := b.Request(true, http.MethodPost, endpoint, data, nil)
+	if err != nil {
+		return GuildInvite{}, err
+	}
+
 	var invite GuildInvite
-	decode(customRequest(b, "POST", endpoint, data, nil), &invite)
-	return invite
+	if err := decode(resp, &invite); err != nil {
+		return GuildInvite{}, err
+	}
+
+	return invite, nil
 }
 
 // Creates a timeout.
 // The timeout duration is specified using TimeoutOptions.
-func (g *GuildManager) CreateTimeout(b *Bot, GuildID, UserID string, Options TimeoutOptions) {
-	endpoint := fmt.Sprintf("https://discord.com/api/v9/guilds/%s/members/%s", GuildID, UserID)
+func (g *GuildManager) CreateTimeout(b *Bot, GuildID, UserID string, Options TimeoutOptions) error {
+	endpoint := fmt.Sprintf("guilds/%s/members/%s", GuildID, UserID)
 	timestamp := time.Now().UTC().AddDate(0, 0, Options.DaysToAdd).Add(time.Minute * time.Duration(Options.MinutesToAdd)).Format(time.RFC3339)
 	data := map[string]interface{}{
 		"communication_disabled_until": timestamp,
 	}
-	customRequest(b, "PATCH", endpoint, data, nil)
+
+	_, err := b.Request(true, http.MethodPatch, endpoint, data, nil)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 // Removes a timeout.
-func (g *GuildManager) RemoveTimeout(b *Bot, GuildID, UserID string) {
-	endpoint := fmt.Sprintf("https://discord.com/api/v9/guilds/%s/members/%s", GuildID, UserID)
+func (g *GuildManager) RemoveTimeout(b *Bot, GuildID, UserID string) error {
+	endpoint := fmt.Sprintf("guilds/%s/members/%s", GuildID, UserID)
 	data := map[string]interface{}{
 		"communication_disabled_until": nil,
 	}
-	customRequest(b, "PATCH", endpoint, data, nil)
+
+	_, err := b.Request(true, http.MethodPatch, endpoint, data, nil)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
-/*
-	For some reason, I can't get the GetGuild functions to work with customRequest.
-	customRequest also refuses to work with URLs that return arrays.
-	Oh well, at least it works!
-	I also have to improve on error handling someday lol
-*/
-
 // Returns a GuildMember object. Not fully functional.
-func (g *GuildManager) GetGuildMember(b *Bot, GuildID, UserID string) GuildMember {
-	endpoint := fmt.Sprintf("https://discord.com/api/v9/guilds/%s/members/%s", GuildID, UserID)
-	resp, err := b.Request(true, "GET", endpoint, nil, nil)
+func (g *GuildManager) GetGuildMember(b *Bot, GuildID, UserID string) (GuildMember, error) {
+	endpoint := fmt.Sprintf("guilds/%s/members/%s", GuildID, UserID)
+	resp, err := b.Request(true, http.MethodGet, endpoint, nil, nil)
 	if err != nil {
-		return GuildMember{}
+		return GuildMember{}, err
 	}
 
 	var member GuildMember
-	decode(resp, &member)
+	if err := decode(resp, &member); err != nil {
+		return GuildMember{}, err
+	}
 
-	return member
+	return member, nil
 }
 
-// Returns a Guild object.
-func (g *GuildManager) GetGuild(b *Bot, GuildID string) Guild {
-	endpoint := fmt.Sprintf("https://discord.com/api/v9/guilds/%s", GuildID)
-	resp, err := b.Request(true, "GET", endpoint, nil, nil)
+// Returns a Guild object, along with any encountered errors.
+func (g *GuildManager) GetGuild(b *Bot, GuildID string) (Guild, error) {
+	endpoint := fmt.Sprintf("guilds/%s", GuildID)
+	resp, err := b.Request(true, http.MethodGet, endpoint, nil, nil)
 	if err != nil {
-		return Guild{}
+		return Guild{}, err
 	}
 
 	var guild Guild
-	decode(resp, &guild)
+	if err := decode(resp, &guild); err != nil {
+		return Guild{}, err
+	}
 
-	return guild
+	return guild, nil
 }
 
-// Returns an array of Channel objects.
-func (g *GuildManager) GetGuildChannels(b *Bot, GuildID string) []Channel {
-	endpoint := fmt.Sprintf("https://discord.com/api/v9/guilds/%s/channels", GuildID)
+// Returns an array of Channel objects, along with any encountered errors.
+func (g *GuildManager) GetGuildChannels(b *Bot, GuildID string) ([]Channel, error) {
+	endpoint := fmt.Sprintf("guilds/%s/channels", GuildID)
 	resp, err := b.Request(true, "GET", endpoint, nil, nil)
 	if err != nil {
-		return []Channel{}
+		return []Channel{}, err
 	}
 
 	var channels []Channel
-	decode(resp, &channels)
+	if err := decode(resp, &channels); err != nil {
+		return []Channel{}, err
+	}
 
-	return channels
+	return channels, nil
 }
 
-// Returns an array of role IDs.
-func (g *GuildManager) GetRolesForUser(b *Bot, GuildID, UserID string) []Role {
-	endpoint := fmt.Sprintf("https://discord.com/api/v9/guilds/%s/members/%s", GuildID, UserID)
+// Returns an array of role IDs, along with any encountered errors.
+func (g *GuildManager) GetRolesForUser(b *Bot, GuildID, UserID string) ([]Role, error) {
+	endpoint := fmt.Sprintf("guilds/%s/members/%s", GuildID, UserID)
 	resp, err := b.Request(true, "GET", endpoint, nil, nil)
 	if err != nil {
-		return nil
+		return []Role{}, err
 	}
 
 	var member GuildMember
-	err = json.NewDecoder(resp.Body).Decode(&member)
-	if err != nil {
-		return nil
+	if err := decode(resp, &member); err != nil {
+		return []Role{}, err
 	}
 
-	roles := g.GetGuild(b, GuildID).Roles
+	guild, err := g.GetGuild(b, GuildID)
+	if err != nil {
+		return []Role{}, err
+	}
+
 	var userRoles []Role
 	for _, roleID := range member.Roles {
-		for _, role := range roles {
+		for _, role := range guild.Roles {
 			if role.ID == roleID {
 				userRoles = append(userRoles, role)
 				break
@@ -176,7 +242,7 @@ func (g *GuildManager) GetRolesForUser(b *Bot, GuildID, UserID string) []Role {
 		}
 	}
 
-	return userRoles
+	return userRoles, nil
 }
 
 func (r *Role) HasPermission(permission Permission) bool {
@@ -189,11 +255,17 @@ func (r *Role) HasPermission(permission Permission) bool {
 
 // Checks if an user has the specified role, in the given guild.
 func (g *GuildManager) HasRole(b *Bot, GuildID, RoleID, UserID string) bool {
-	roles := g.GetRolesForUser(b, GuildID, UserID)
+	roles, err := g.GetRolesForUser(b, GuildID, UserID)
+
+	if err != nil {
+		return false
+	}
+
 	for _, role := range roles {
 		if role.ID == RoleID {
 			return true
 		}
 	}
+
 	return false
 }

@@ -339,6 +339,18 @@ type TimeoutOptions struct {
 	MinutesToAdd int
 }
 
+const (
+	Online       = "online"
+	Idle         = "idle"
+	DoNotDisturb = "dnd"
+	Invisible    = "invisible"
+)
+
+type StatusOptions struct {
+	Status  string
+	Content string
+}
+
 type Sticker struct {
 	ID string `json:"id"`
 }

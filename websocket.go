@@ -36,8 +36,11 @@ type Bot struct {
 
 // Bot functions and event emitter
 
+// Gets information about the user.
+//
+// Used for client, so you can do bot.Client.Username or something.
 func (b *Bot) getInfo() User {
-	resp, err := b.Request(true, "GET", "https://discord.com/api/v9/users/@me", nil, nil)
+	resp, err := b.Request(true, "GET", "users/@me", nil, nil)
 	if err != nil {
 		return User{}
 	}
